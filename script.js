@@ -1,3 +1,5 @@
+//TODO: multiple boba costs, custom orders, logic for discounts
+
 const BOBA_COST = 5; // assuming $5 bobas
 
 /**
