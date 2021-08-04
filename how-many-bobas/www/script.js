@@ -10,10 +10,10 @@ function calcDomainsCost(domains) {
 
 /**
  * @param {float} cost
- * @returns number of whole bobas that could be purchased
+ * @returns number of bobas that could be purchased
  */
 function costToBobas(cost) {
-  return Math.floor(cost / BOBA_COST);
+  return cost / BOBA_COST;
 }
 
 /**
@@ -21,13 +21,16 @@ function costToBobas(cost) {
  * @returns header for total cost
  */
 function generateTotalCost(domains) {
-  const totalCost = document.createElement("h2");
-  totalCost.id = "total-cost-header";
-  totalCost.innerHTML =
+  const totalCostText = document.createElement("h2");
+  totalCostText.id = "total-cost-header";
+  const totalCost = calcDomainsCost(domains);
+  totalCostText.innerHTML =
     "Enough is enough. Matt spends<br/><span id='cost'>$" +
-    calcDomainsCost(domains) +
-    "</span><br/>on domains every year.";
-  return totalCost;
+    totalCost +
+    "</span><br/>on domains every year. That's enough to buy<br/><span id='total-num-bobas'>" +
+    costToBobas(totalCost).toFixed(1) +
+    "</span><br/>bobas.";
+  return totalCostText;
 }
 
 /**
@@ -41,7 +44,7 @@ function generateCardFromObject(domain) {
 
   cardContainer.className = "card-container";
 
-  const numBobas = costToBobas(domain.cost);
+  const numBobas = costToBobas(domain.cost).toFixed(1);
 
   cardSiteName.innerHTML =
     'Instead of buying <a href="' + domain.site + '">' + domain.site + "</a>,";

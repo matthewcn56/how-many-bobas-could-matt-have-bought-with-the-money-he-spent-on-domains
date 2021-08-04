@@ -56,7 +56,7 @@ a {
   text-align: center;
 }
 
-#cost {
+#cost, #total-num-bobas {
   font-size: 40px;
 }
 
