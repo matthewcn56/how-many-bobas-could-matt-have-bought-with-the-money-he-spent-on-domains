@@ -9,11 +9,15 @@ const domainsList = [
   },
   {
     site: "https://crystalfan.club",
-    cost: 9,
+    cost: 1.15,
   },
   {
     site: "http://elliefan.club/",
-    cost: 9,
+    cost: 1.15,
+  },
+  {
+    site: "http://emmyfan.club/",
+    cost: 1.15,
   },
   {
     site: "https://matthewwang.me/",
