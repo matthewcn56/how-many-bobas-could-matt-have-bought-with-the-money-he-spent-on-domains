@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #f8f8ff;
+  font-family: "Poppins", sans-serif;
+}
+
+button,
+input,
+select,
+option {
+  font-family: "Poppins", sans-serif;
+}
+
+h1 {
+  font-size: 40px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+h2 {
+  font-size: 24px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  padding: 0;
+}
+
+h3 {
+  font-size: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+#title {
+  text-align: justify;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+#total-cost-header {
+  text-align: center;
+}
+
+#cost {
+  font-size: 40px;
+}
+
+#cards {
+  display: flex;
+  flex-flow: column;
+}
+
+.card-container {
+  background: #ffe496;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: center;
+}
+
+.card-site-name {
+}
+
+.card-boba-count {
+}
+
+/* Responsiveness */
+@media only screen and (max-width: 1000px) {
+  #content {
+    width: 75%;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  #content {
+    width: 100%;
+  }
+}
+/* Responsiveness */
