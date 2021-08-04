@@ -1,0 +1,18 @@
+[
+  {
+    "site": "site1.com",
+    "cost": 9
+  },
+  {
+    "site": "site2.com",
+    "cost": 9
+  },
+  {
+    "site": "site3.com",
+    "cost": 9
+  },
+  {
+    "site": "site4.com",
+    "cost": 9
+  }
+]
