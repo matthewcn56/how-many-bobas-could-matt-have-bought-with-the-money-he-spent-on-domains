@@ -89,13 +89,13 @@ let state;
  * called when the body is loaded
  * @param {array of domain objects} domains
  */
-function onloadPopulate() {
+function onloadPopulate(domains) {
   if('geolocation' in navigator) {
     // geolocation is available
     navigator.geolocation.getCurrentPosition(handlePosition);
   }
-  document.getElementById('total-cost').appendChild(generateTotalCost(domainsList));
-  document.getElementById('cost-breakdown').appendChild(generateCards(domainsList));
+  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
+  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
 }
 
 function handlePosition(position) {
