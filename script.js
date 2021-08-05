@@ -23,15 +23,15 @@ function costToBobas(cost) {
  * @returns header for total cost
  */
 function generateTotalCost(domains) {
-  const totalCostText = document.createElement("h2");
-  totalCostText.id = "total-cost-header";
+  const totalCostText = document.createElement('h2');
+  totalCostText.id = 'total-cost-header';
   const totalCost = calcDomainsCost(domains);
   totalCostText.innerHTML =
     "Enough is enough. Matt spends<br/><span id='cost'>$" +
     totalCost +
     "</span><br/>on domains every year. That's enough to buy<br/><span id='total-num-bobas'>" +
     costToBobas(totalCost).toFixed(1) +
-    "</span><br/>bobas.";
+    '</span><br/>bobas.';
   return totalCostText;
 }
 
@@ -40,23 +40,23 @@ function generateTotalCost(domains) {
  * @returns div for a card
  */
 function generateCardFromObject(domain) {
-  const cardContainer = document.createElement("div");
-  const cardSiteName = document.createElement("h3");
-  const cardBobaCount = document.createElement("h2");
+  const cardContainer = document.createElement('div');
+  const cardSiteName = document.createElement('h3');
+  const cardBobaCount = document.createElement('h2');
 
-  cardContainer.className = "card-container";
+  cardContainer.className = 'card-container';
 
   const numBobas = costToBobas(domain.cost).toFixed(1);
 
   cardSiteName.innerHTML =
-    'Instead of buying <a href="' + domain.site + '">' + domain.site + "</a>,";
-  cardSiteName.className = "card-site-name";
+    'Instead of buying <a href="' + domain.site + '">' + domain.site + '</a>,';
+  cardSiteName.className = 'card-site-name';
   cardBobaCount.innerHTML =
-    "Matt could have bought " +
+    'Matt could have bought ' +
     numBobas +
-    (numBobas === 1 ? " boba" : " bobas") +
-    " this year.";
-  cardBobaCount.className = "card-boba-count";
+    (numBobas === 1 ? ' boba' : ' bobas') +
+    ' this year.';
+  cardBobaCount.className = 'card-boba-count';
 
   cardContainer.appendChild(cardSiteName);
   cardContainer.appendChild(cardBobaCount);
@@ -69,8 +69,8 @@ function generateCardFromObject(domain) {
  * @returns div with all cards
  */
 function generateCards(domains) {
-  const cards = document.createElement("div");
-  cards.id = "cards";
+  const cards = document.createElement('div');
+  cards.id = 'cards';
 
   for (let i = 0; i < domains.length; i++) {
     cards.appendChild(generateCardFromObject(domains[i]));
@@ -84,6 +84,6 @@ function generateCards(domains) {
  * @param {array of domain objects} domains
  */
 function onloadPopulate(domains) {
-  document.getElementById("total-cost").appendChild(generateTotalCost(domains));
-  document.getElementById("cost-breakdown").appendChild(generateCards(domains));
+  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
+  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
 }
