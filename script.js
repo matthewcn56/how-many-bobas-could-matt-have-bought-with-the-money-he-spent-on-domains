@@ -45,7 +45,6 @@ const toppings = {
 };
 
 let flavorParam = urlParams.get("flavor");
-console.log("flavors is: " + flavors[flavorParam]);
 flavorParam = flavors[flavorParam] ? flavorParam : "WINTERMELON";
 const flavor = flavors[flavorParam].NAME;
 const flavorPrice = flavors[flavorParam].PRICE;
