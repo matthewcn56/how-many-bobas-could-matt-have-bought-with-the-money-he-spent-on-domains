@@ -3,8 +3,6 @@
 //TODO: use user location to calculate local tax and display local currency
 
 const BOBA_COST = 5; // assuming $5 bobas
-const GEOCODING_API_KEY = "AIzaSyBIfXhMxXV5ZX8Jd0Gbiq59mEZyR0A8pXk"; // owned by dtjanaka
-
 const urlQueryString = window.location.search;
 const urlParams = new URLSearchParams(urlQueryString);
 
@@ -65,6 +63,10 @@ const topping2 = toppings[topping2Param]
   ? toppings[topping2Param].NAME
   : "none";
 const topping2Price = topping2 !== "none" ? toppings[topping2Param].PRICE : 0;
+
+// not sure if we need these globals yet
+/*let country;
+let state;*/
 
 /**
  * @param {array of domain objects} domains
@@ -176,34 +178,42 @@ function generateCards(domains) {
   return cards;
 }
 
-let country;
-let state;
+/**
+ * callback function for getCurrentPosition
+ * @param {object containing position data} position
+ */
+function handlePosition(position) {
+  const lat = position.coords.latitude;
+  const lng = position.coords.longitude;
+
+  const geocoder = new google.maps.Geocoder();
+  const latlng = {
+    lat: lat,
+    lng: lng,
+  };
+  geocoder
+    .geocode({ location: latlng })
+    .then((response) => {
+      if (response.results[0]) {
+        console.log(response);
+      } else {
+        console.log('no results');
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
 
 /**
  * called when the body is loaded
  * @param {array of domain objects} domains
  */
 function onloadPopulate(domains) {
-  if ("geolocation" in navigator) {
+  if ('geolocation' in navigator) {
     // geolocation is available
     navigator.geolocation.getCurrentPosition(handlePosition);
   }
   document.getElementById("total-cost").appendChild(generateTotalCost(domains));
   document.getElementById("cost-breakdown").appendChild(generateCards(domains));
-}
-
-async function handlePosition(position) {
-  const lat = position.coords.latitude;
-  const long = position.coords.longitude;
-
-  const url =
-    "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-    lat +
-    "," +
-    long +
-    "&key=" +
-    GEOCODING_API_KEY;
-  const geocodingResponse = await fetch(url);
-  const geocodingResult = await geocodingResponse.json();
-  console.log(geocodingResult);
 }
