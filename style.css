@@ -15,6 +15,7 @@ option {
   font-family: "Poppins", sans-serif;
 }
 
+/*TODO: use relative units instead*/
 h1 {
   font-size: 40px;
   margin-top: 20px;
@@ -80,13 +81,13 @@ a {
 }
 
 /* Responsiveness */
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 1000px) {
   #content {
     width: 75%;
   }
 }
 
-@media only screen and (max-width: 900px) {
+@media only screen and (max-width: 600px) {
   #content {
     width: 100%;
   }
