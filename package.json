@@ -1,0 +1,23 @@
+{
+  "name": "how-many-bobas-could-matt-have-bought-with-the-money-he-spent-on-domains",
+  "version": "1.0.0",
+  "private": true,
+  "repository": "https://github.com/matthewcn56/how-many-bobas-could-matt-have-bought-with-the-money-he-spent-on-domains.git",
+  "license": "MIT",
+  "devDependencies": {
+    "husky": "^7.0.0",
+    "lint-staged": "^11.1.1",
+    "prettier": "^2.3.2"
+  },
+  "scripts": {
+    "prepare": "husky install",
+    "format": "prettier --write *.{js,css,html}",
+    "lint-staged": "lint-staged"
+  },
+  "lint-staged": {
+    "*.(js|css|html)": "prettier --write"
+  },
+  "prettier": {
+    "singleQuote": true
+  }
+}
