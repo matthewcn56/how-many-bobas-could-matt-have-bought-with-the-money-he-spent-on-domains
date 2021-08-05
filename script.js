@@ -3,7 +3,6 @@
 //TODO: use user location to calculate local tax and display local currency
 
 const BOBA_COST = 5; // assuming $5 bobas
-const GEOCODING_API_KEY = 'AIzaSyBIfXhMxXV5ZX8Jd0Gbiq59mEZyR0A8pXk'; // owned by dtjanaka
 
 /**
  * @param {array of domain objects} domains
@@ -99,12 +98,27 @@ function onloadPopulate(domains) {
   document.getElementById('cost-breakdown').appendChild(generateCards(domains));
 }
 
-async function handlePosition(position) {
+function handlePosition(position) {
   const lat = position.coords.latitude;
-  const long = position.coords.longitude;
+  const lng = position.coords.longitude;
 
-  const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=' + GEOCODING_API_KEY;
-  const geocodingResponse = await fetch(url);
-  const geocodingResult = await geocodingResponse.json();
-  console.log(geocodingResult);
+  const geocoder = new google.maps.Geocoder();
+  geocodeLatLng(geocoder, lat, lng);
+}
+
+function geocodeLatLng(geocoder, lat, lng) {
+  const latlng = {
+    'lat': lat,
+    'lng': lng,
+  };
+  geocoder
+    .geocode({ location: latlng })
+    .then((response) => {
+      if (response.results[0]) {
+        console.log(response);
+      } else {
+        console.log('no results');
+      }
+    })
+    .catch((e) => {console.log(e);});
 }
