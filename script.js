@@ -35,7 +35,7 @@ const flavors = {
 
 const toppings = {
   BOBA: {
-    NAME: "boba pearls",
+    NAME: "pearls",
     PRICE: 0.5,
   },
   CHEESE_FOAM: {
@@ -110,7 +110,7 @@ function generateTotalCost(domains) {
       topping2Price
     ).toFixed(1) +
     "</span><br/>";
-  totalCostText.innerHTML += size + " bobas";
+  totalCostText.innerHTML += size + " " + flavor + " bobas";
   if (topping1 != "none") totalCostText.innerHTML += " with " + topping1;
   if (topping2 != "none") totalCostText.innerHTML += " and " + topping2;
   return totalCostText;
