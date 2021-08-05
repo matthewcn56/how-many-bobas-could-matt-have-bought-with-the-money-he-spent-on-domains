@@ -3,6 +3,66 @@
 //TODO: use user location to calculate local tax and display local currency
 
 const BOBA_COST = 5; // assuming $5 bobas
+const urlQueryString = window.location.search;
+const urlParams = new URLSearchParams(urlQueryString);
+
+//using t4's menu: https://t4togo.com/Menu1
+
+const sizes = {
+  SMALL: 'small',
+  LARGE: 'large',
+};
+
+const SMALL_PRICE = 0;
+const UPCHARGE_PRICE = 0.5;
+
+const flavors = {
+  WINTERMELON: {
+    NAME: 'wintermelon milk tea',
+    PRICE: 4.55,
+  },
+  OKINAWA: {
+    NAME: 'okinawa milk tea',
+    PRICE: 4.8,
+  },
+  HOKKAIDO: {
+    NAME: 'royal hokkaido milk tea',
+    PRICE: 4.5,
+  },
+};
+
+const toppings = {
+  BOBA: {
+    NAME: 'pearls',
+    PRICE: 0.5,
+  },
+  CHEESE_FOAM: {
+    NAME: 'cheese foam',
+    PRICE: 1.5,
+  },
+};
+
+let flavorParam = urlParams.get('flavor');
+flavorParam = flavors[flavorParam] ? flavorParam : 'WINTERMELON';
+const flavor = flavors[flavorParam].NAME;
+const flavorPrice = flavors[flavorParam].PRICE;
+
+const sizeParam = urlParams.get('size');
+const size = sizes[sizeParam] ? sizes[sizeParam] : 'small';
+let sizePrice = SMALL_PRICE;
+sizePrice += size === 'large' ? UPCHARGE_PRICE : 0;
+
+const topping1Param = urlParams.get('topping1');
+const topping1 = toppings[topping1Param]
+  ? toppings[topping1Param].NAME
+  : 'none';
+const topping1Price = topping1 !== 'none' ? toppings[topping1Param].PRICE : 0;
+
+const topping2Param = urlParams.get('topping2');
+const topping2 = toppings[topping2Param]
+  ? toppings[topping2Param].NAME
+  : 'none';
+const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
 // not sure if we need these globals yet
 /*let country;
@@ -18,10 +78,21 @@ function calcDomainsCost(domains) {
 
 /**
  * @param {float} cost
+ * @param {float} flavorPrice
+ * @param {float} sizePrice
+ * @param {float} topping1Price
+ * @param {float} topping2Price
  * @returns number of bobas that could be purchased
  */
-function costToBobas(cost) {
-  return cost / BOBA_COST;
+function costToBobas(
+  cost,
+  flavorPrice,
+  sizePrice,
+  topping1Price,
+  topping2Price
+) {
+  const bobaPrice = flavorPrice + sizePrice + topping1Price + topping2Price;
+  return cost / bobaPrice;
 }
 
 /**
@@ -37,8 +108,17 @@ function generateTotalCost(domains) {
     totalCost +
     '</span><br/>on domains every year. ' +
     'That\'s enough to buy<br/><span id="total-num-bobas">' +
-    costToBobas(totalCost).toFixed(1) +
-    '</span><br/>bobas.';
+    costToBobas(
+      calcDomainsCost(domains),
+      flavorPrice,
+      sizePrice,
+      topping1Price,
+      topping2Price
+    ).toFixed(1) +
+    '</span><br/>';
+  totalCostText.innerHTML += size + ' ' + flavor + ' bobas';
+  if (topping1 != 'none') totalCostText.innerHTML += ' with ' + topping1;
+  if (topping2 != 'none') totalCostText.innerHTML += ' and ' + topping2;
   return totalCostText;
 }
 
@@ -53,7 +133,13 @@ function generateCardFromObject(domain) {
 
   cardContainer.className = 'card-container';
 
-  const numBobas = costToBobas(domain.cost).toFixed(1);
+  const numBobas = costToBobas(
+    domain.cost,
+    flavorPrice,
+    sizePrice,
+    topping1Price,
+    topping2Price
+  ).toFixed(1);
 
   cardSiteName.innerHTML =
     'Instead of buying <a href="' + domain.site + '">' + domain.site + '</a>,';
