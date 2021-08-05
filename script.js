@@ -1,4 +1,6 @@
-//TODO: multiple boba costs, custom orders, logic for discounts
+//TODO: multiple boba costs, custom orders
+//TODO: account for website discounts
+//TODO: use user location to calculate local tax
 
 const BOBA_COST = 5; // assuming $5 bobas
 
@@ -27,9 +29,10 @@ function generateTotalCost(domains) {
   totalCostText.id = 'total-cost-header';
   const totalCost = calcDomainsCost(domains);
   totalCostText.innerHTML =
-    "Enough is enough. Matt spends<br/><span id='cost'>$" +
+    'Enough is enough. Matt spends<br/><span id="cost">$' +
     totalCost +
-    "</span><br/>on domains every year. That's enough to buy<br/><span id='total-num-bobas'>" +
+    '</span><br/>on domains every year. ' +
+    'That\'s enough to buy<br/><span id="total-num-bobas">' +
     costToBobas(totalCost).toFixed(1) +
     '</span><br/>bobas.';
   return totalCostText;
