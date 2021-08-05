@@ -9,8 +9,8 @@ const urlParams = new URLSearchParams(urlQueryString);
 //using t4's menu: https://t4togo.com/Menu1
 
 const sizes = {
-  SMALL: "small",
-  LARGE: "large",
+  SMALL: 'small',
+  LARGE: 'large',
 };
 
 const SMALL_PRICE = 0;
@@ -18,51 +18,51 @@ const UPCHARGE_PRICE = 0.5;
 
 const flavors = {
   WINTERMELON: {
-    NAME: "wintermelon milk tea",
+    NAME: 'wintermelon milk tea',
     PRICE: 4.55,
   },
   OKINAWA: {
-    NAME: "okinawa milk tea",
+    NAME: 'okinawa milk tea',
     PRICE: 4.8,
   },
   HOKKAIDO: {
-    NAME: "royal hokkaido milk tea",
+    NAME: 'royal hokkaido milk tea',
     PRICE: 4.5,
   },
 };
 
 const toppings = {
   BOBA: {
-    NAME: "pearls",
+    NAME: 'pearls',
     PRICE: 0.5,
   },
   CHEESE_FOAM: {
-    NAME: "cheese foam",
+    NAME: 'cheese foam',
     PRICE: 1.5,
   },
 };
 
-let flavorParam = urlParams.get("flavor");
-flavorParam = flavors[flavorParam] ? flavorParam : "WINTERMELON";
+let flavorParam = urlParams.get('flavor');
+flavorParam = flavors[flavorParam] ? flavorParam : 'WINTERMELON';
 const flavor = flavors[flavorParam].NAME;
 const flavorPrice = flavors[flavorParam].PRICE;
 
-const sizeParam = urlParams.get("size");
-const size = sizes[sizeParam] ? sizes[sizeParam] : "small";
+const sizeParam = urlParams.get('size');
+const size = sizes[sizeParam] ? sizes[sizeParam] : 'small';
 let sizePrice = SMALL_PRICE;
-sizePrice += size === "large" ? UPCHARGE_PRICE : 0;
+sizePrice += size === 'large' ? UPCHARGE_PRICE : 0;
 
-const topping1Param = urlParams.get("topping1");
+const topping1Param = urlParams.get('topping1');
 const topping1 = toppings[topping1Param]
   ? toppings[topping1Param].NAME
-  : "none";
-const topping1Price = topping1 !== "none" ? toppings[topping1Param].PRICE : 0;
+  : 'none';
+const topping1Price = topping1 !== 'none' ? toppings[topping1Param].PRICE : 0;
 
-const topping2Param = urlParams.get("topping2");
+const topping2Param = urlParams.get('topping2');
 const topping2 = toppings[topping2Param]
   ? toppings[topping2Param].NAME
-  : "none";
-const topping2Price = topping2 !== "none" ? toppings[topping2Param].PRICE : 0;
+  : 'none';
+const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
 // not sure if we need these globals yet
 /*let country;
@@ -100,13 +100,13 @@ function costToBobas(
  * @returns header for total cost
  */
 function generateTotalCost(domains) {
-  const totalCostText = document.createElement("h2");
-  totalCostText.id = "total-cost-header";
+  const totalCostText = document.createElement('h2');
+  totalCostText.id = 'total-cost-header';
   const totalCost = calcDomainsCost(domains);
   totalCostText.innerHTML =
     'Enough is enough. Matt spends<br/><span id="cost">$' +
     totalCost +
-    "</span><br/>on domains every year. " +
+    '</span><br/>on domains every year. ' +
     'That\'s enough to buy<br/><span id="total-num-bobas">' +
     costToBobas(
       calcDomainsCost(domains),
@@ -115,12 +115,13 @@ function generateTotalCost(domains) {
       topping1Price,
       topping2Price
     ).toFixed(1) +
-    "</span><br/>";
-  totalCostText.innerHTML += size + " " + flavor + " bobas";
-  if (topping1 != "none") totalCostText.innerHTML += " with " + topping1;
-  if (topping2 != "none") totalCostText.innerHTML += " and " + topping2;
+    '</span><br/>';
+  totalCostText.innerHTML += size + ' ' + flavor + ' bobas';
+  if (topping1 != 'none') totalCostText.innerHTML += ' with ' + topping1;
+  if (topping2 != 'none') totalCostText.innerHTML += ' and ' + topping2;
   return totalCostText;
 }
+
 /**
  * @param {string} size
  * @param {string} topping1
@@ -133,11 +134,11 @@ function generateTotalCost(domains) {
  * @returns div for a card
  */
 function generateCardFromObject(domain) {
-  const cardContainer = document.createElement("div");
-  const cardSiteName = document.createElement("h3");
-  const cardBobaCount = document.createElement("h2");
+  const cardContainer = document.createElement('div');
+  const cardSiteName = document.createElement('h3');
+  const cardBobaCount = document.createElement('h2');
 
-  cardContainer.className = "card-container";
+  cardContainer.className = 'card-container';
 
   const numBobas = costToBobas(
     domain.cost,
@@ -148,14 +149,14 @@ function generateCardFromObject(domain) {
   ).toFixed(1);
 
   cardSiteName.innerHTML =
-    'Instead of buying <a href="' + domain.site + '">' + domain.site + "</a>,";
-  cardSiteName.className = "card-site-name";
+    'Instead of buying <a href="' + domain.site + '">' + domain.site + '</a>,';
+  cardSiteName.className = 'card-site-name';
   cardBobaCount.innerHTML =
-    "Matt could have bought " +
+    'Matt could have bought ' +
     numBobas +
-    (numBobas === 1 ? " boba" : " bobas") +
-    " this year.";
-  cardBobaCount.className = "card-boba-count";
+    (numBobas === 1 ? ' boba' : ' bobas') +
+    ' this year.';
+  cardBobaCount.className = 'card-boba-count';
 
   cardContainer.appendChild(cardSiteName);
   cardContainer.appendChild(cardBobaCount);
@@ -168,8 +169,8 @@ function generateCardFromObject(domain) {
  * @returns div with all cards
  */
 function generateCards(domains) {
-  const cards = document.createElement("div");
-  cards.id = "cards";
+  const cards = document.createElement('div');
+  cards.id = 'cards';
 
   for (let i = 0; i < domains.length; i++) {
     cards.appendChild(generateCardFromObject(domains[i]));
@@ -214,6 +215,6 @@ function onloadPopulate(domains) {
     // geolocation is available
     navigator.geolocation.getCurrentPosition(handlePosition);
   }
-  document.getElementById("total-cost").appendChild(generateTotalCost(domains));
-  document.getElementById("cost-breakdown").appendChild(generateCards(domains));
+  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
+  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
 }
