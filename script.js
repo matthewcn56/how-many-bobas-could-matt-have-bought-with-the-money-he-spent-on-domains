@@ -3,7 +3,7 @@
 //TODO: use user location to calculate local tax and display local currency
 
 const BOBA_COST = 5; // assuming $5 bobas
-const GEOCODING_API_KEY = 'AIzaSyDn57kYZYNY-kVhaFV5nczvYW4XvpQIlHE'; // owned by dtjanaka
+const GEOCODING_API_KEY = 'AIzaSyBIfXhMxXV5ZX8Jd0Gbiq59mEZyR0A8pXk'; // owned by dtjanaka
 
 /**
  * @param {array of domain objects} domains
