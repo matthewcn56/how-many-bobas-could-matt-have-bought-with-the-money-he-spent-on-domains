@@ -123,13 +123,6 @@ function generateTotalCost(domains) {
 }
 
 /**
- * @param {string} size
- * @param {string} topping1
- * @param {string} topping2
- * @returns string describing the boba
- */
-
-/**
  * @param {domain object} domain
  * @returns div for a card
  */
