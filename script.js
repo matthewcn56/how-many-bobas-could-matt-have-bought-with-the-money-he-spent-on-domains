@@ -106,4 +106,5 @@ async function handlePosition(position) {
   const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=' + GEOCODING_API_KEY;
   const geocodingResponse = await fetch(url);
   const geocodingResult = await geocodingResponse.json();
+  console.log(geocodingResult);
 }
