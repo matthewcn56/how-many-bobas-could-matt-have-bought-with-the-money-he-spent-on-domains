@@ -1,8 +1,9 @@
 //TODO: multiple boba costs, custom orders
 //TODO: account for website discounts
-//TODO: use user location to calculate local tax
+//TODO: use user location to calculate local tax and display local currency
 
 const BOBA_COST = 5; // assuming $5 bobas
+const GEOCODING_API_KEY = 'AIzaSyDn57kYZYNY-kVhaFV5nczvYW4XvpQIlHE'; // owned by dtjanaka
 
 /**
  * @param {array of domain objects} domains
@@ -82,11 +83,27 @@ function generateCards(domains) {
   return cards;
 }
 
+let country;
+let state;
+
 /**
  * called when the body is loaded
  * @param {array of domain objects} domains
  */
 function onloadPopulate(domains) {
+  if('geolocation' in navigator) {
+    // geolocation is available
+    navigator.geolocation.getCurrentPosition(handlePosition);
+  }
   document.getElementById('total-cost').appendChild(generateTotalCost(domains));
   document.getElementById('cost-breakdown').appendChild(generateCards(domains));
+}
+
+async function handlePosition(position) {
+  const lat = position.coords.latitude;
+  const long = position.coords.longitude;
+
+  const url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + long + '&key=' + GEOCODING_API_KEY;
+  const geocodingResponse = await fetch(url);
+  const geocodingResult = await geocodingResponse.json();
 }
