@@ -180,14 +180,6 @@ let state;
  * @param {array of domain objects} domains
  */
 function onloadPopulate(domains) {
-  console.log(
-    "size is: " +
-      size +
-      ", topping 1 is: " +
-      topping1 +
-      ", topping 2 is: " +
-      topping2
-  );
   if ("geolocation" in navigator) {
     // geolocation is available
     navigator.geolocation.getCurrentPosition(handlePosition);
