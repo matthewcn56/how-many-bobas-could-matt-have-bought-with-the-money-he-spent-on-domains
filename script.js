@@ -4,6 +4,10 @@
 
 const BOBA_COST = 5; // assuming $5 bobas
 
+// not sure if we need these globals yet
+/*let country;
+let state;*/
+
 /**
  * @param {array of domain objects} domains
  * @returns total cost of all domains
@@ -82,34 +86,18 @@ function generateCards(domains) {
   return cards;
 }
 
-let country;
-let state;
-
 /**
- * called when the body is loaded
- * @param {array of domain objects} domains
+ * callback function for getCurrentPosition
+ * @param {object containing position data} position
  */
-function onloadPopulate(domains) {
-  if('geolocation' in navigator) {
-    // geolocation is available
-    navigator.geolocation.getCurrentPosition(handlePosition);
-  }
-  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
-  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
-}
-
 function handlePosition(position) {
   const lat = position.coords.latitude;
   const lng = position.coords.longitude;
 
   const geocoder = new google.maps.Geocoder();
-  geocodeLatLng(geocoder, lat, lng);
-}
-
-function geocodeLatLng(geocoder, lat, lng) {
   const latlng = {
-    'lat': lat,
-    'lng': lng,
+    lat: lat,
+    lng: lng,
   };
   geocoder
     .geocode({ location: latlng })
@@ -120,5 +108,20 @@ function geocodeLatLng(geocoder, lat, lng) {
         console.log('no results');
       }
     })
-    .catch((e) => {console.log(e);});
+    .catch((e) => {
+      console.log(e);
+    });
+}
+
+/**
+ * called when the body is loaded
+ * @param {array of domain objects} domains
+ */
+function onloadPopulate(domains) {
+  if ('geolocation' in navigator) {
+    // geolocation is available
+    navigator.geolocation.getCurrentPosition(handlePosition);
+  }
+  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
+  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
 }
