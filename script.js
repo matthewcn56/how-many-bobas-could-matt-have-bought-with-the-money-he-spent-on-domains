@@ -45,21 +45,26 @@ const toppings = {
 };
 
 let flavorParam = urlParams.get("flavor");
-flavorParam ??= "WINTERMELON";
+console.log("flavors is: " + flavors[flavorParam]);
+flavorParam = flavors[flavorParam] ? flavorParam : "WINTERMELON";
 const flavor = flavors[flavorParam].NAME;
 const flavorPrice = flavors[flavorParam].PRICE;
 
 const sizeParam = urlParams.get("size");
-const size = sizeParam ? sizes[sizeParam] : "small";
+const size = sizes[sizeParam] ? sizes[sizeParam] : "small";
 let sizePrice = SMALL_PRICE;
 sizePrice += size === "large" ? UPCHARGE_PRICE : 0;
 
 const topping1Param = urlParams.get("topping1");
-const topping1 = topping1Param ? toppings[topping1Param].NAME : "none";
+const topping1 = toppings[topping1Param]
+  ? toppings[topping1Param].NAME
+  : "none";
 const topping1Price = topping1 !== "none" ? toppings[topping1Param].PRICE : 0;
 
 const topping2Param = urlParams.get("topping2");
-const topping2 = topping2Param ? toppings[topping2Param].NAME : "none";
+const topping2 = toppings[topping2Param]
+  ? toppings[topping2Param].NAME
+  : "none";
 const topping2Price = topping2 !== "none" ? toppings[topping2Param].PRICE : 0;
 
 /**
