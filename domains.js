@@ -1,38 +1,39 @@
+ //SSL = +4.98 on all https domains
 const domainsList = [
   {
     site: "https://www.howmanyclubsiscrystalin.com/",
-    cost: 12,
+    cost: 13.86,
   },
   {
     site: "https://howmanyfavoursdoesmattowecrystal.com/",
-    cost: 9,
+    cost: 13.86,
   },
   {
     site: "https://crystalfan.club",
-    cost: 1.15,
+    cost: 6.15,
   },
   {
     site: "http://elliefan.club/",
-    cost: 1.15,
+    cost: 1.17,
   },
   {
     site: "http://emmyfan.club/",
-    cost: 1.15,
+    cost: 1.17,
   },
   {
     site: "https://matthewwang.me/",
-    cost: 9,
+    cost: 10.86,
   },
   {
     site: "http://mattxw.com//",
-    cost: 9,
+    cost: 8.88,
   },
   {
     site: "https://whatthefatdog.com/",
-    cost: 9,
+    cost: 13.86,
   },
   {
     site: "http://theanniejumpedoverthemoon.com",
-    cost: 9,
+    cost: 8.88,
   },
 ];
