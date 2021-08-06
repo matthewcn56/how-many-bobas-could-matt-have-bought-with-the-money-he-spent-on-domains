@@ -66,7 +66,7 @@ const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
 let country = 'US';
 let state = 'CA';
-let taxRate = salesTaxRates[country]['states'][state];
+let taxRate = salesTaxRates[country]['states'][state].rate;
 
 /**
  * @param {array of domain objects} domains
@@ -206,7 +206,7 @@ function handlePosition(position) {
             if (result.types.includes('administrative_area_level_1')) {
               state = result.short_name;
               console.log(state);
-              taxRate = salesTaxRates[country]['states'][state];
+              taxRate = salesTaxRates[country]['states'][state].rate;
               break;
             }
           }
@@ -215,7 +215,7 @@ function handlePosition(position) {
             'No country found in response. Using California, United States.'
           );
         } else {
-          taxRate = salesTaxRates[country];
+          taxRate = salesTaxRates[country].rate;
         }
         console.log('Tax rate is ' + taxRate + '.');
       } else {
