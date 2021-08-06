@@ -5,16 +5,17 @@
 body {
   margin: 0;
   background-color: #f8f8ff;
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 button,
 input,
 select,
 option {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
+/*TODO: use relative units instead*/
 h1 {
   font-size: 40px;
   margin-top: 20px;
