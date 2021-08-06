@@ -2,8 +2,6 @@
 //TODO: account for website discounts
 //TODO: use user location to calculate local tax and display local currency
 
-const allTaxRates = require('./sales_tax_rates.json');
-
 const BOBA_COST = 5; // assuming $5 bobas
 const urlQueryString = window.location.search;
 const urlParams = new URLSearchParams(urlQueryString);
@@ -68,7 +66,7 @@ const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
 let country = 'US';
 let state = 'CA';
-let taxRate = allTaxRates[country]['states'][state];
+let taxRate = salesTaxRates[country]['states'][state];
 
 /**
  * @param {array of domain objects} domains
@@ -208,7 +206,7 @@ function handlePosition(position) {
             if (result.types.includes('administrative_area_level_1')) {
               state = result.short_name;
               console.log(state);
-              taxRate = allTaxRates[country]['states'][state];
+              taxRate = salesTaxRates[country]['states'][state];
               break;
             }
           }
@@ -217,7 +215,7 @@ function handlePosition(position) {
             'No country found in response. Using California, United States.'
           );
         } else {
-          taxRate = allTaxRates[country];
+          taxRate = salesTaxRates[country];
         }
         console.log('Tax rate is ' + taxRate + '.');
       } else {
