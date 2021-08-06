@@ -18,10 +18,10 @@ sudo-ing it if necessary, then installing our dependencies with
 yarn
 ```
 
-which will also automatically install our husky dependency
+which will also automatically install our husky dependency.
 
 ### Development Scripts:
-Our husky hook will automatically format all of your staged changes, but you can do it manually for all html,css,js files with
+Our husky hook will automatically format all of your staged changes, but you can do it manually for all html, css, and js files with
 
 ```sh
 yarn format
