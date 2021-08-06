@@ -9,7 +9,7 @@ const domainsList = [
     cost: 13.86,
   },
   {
-    site: 'https://crystalfan.club',
+    site: 'https://crystalfan.club/',
     cost: 6.15,
   },
   {
@@ -25,7 +25,7 @@ const domainsList = [
     cost: 10.86,
   },
   {
-    site: 'http://mattxw.com//',
+    site: 'http://mattxw.com/',
     cost: 8.88,
   },
   {
@@ -33,7 +33,7 @@ const domainsList = [
     cost: 13.86,
   },
   {
-    site: 'http://theanniejumpedoverthemoon.com',
+    site: 'http://theanniejumpedoverthemoon.com/',
     cost: 8.88,
   },
 ];
