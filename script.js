@@ -64,9 +64,8 @@ const topping2 = toppings[topping2Param]
   : 'none';
 const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
-// not sure if we need these globals yet
-/*let country;
-let state;*/
+let country;
+let state;
 
 /**
  * @param {array of domain objects} domains
@@ -177,21 +176,44 @@ function generateCards(domains) {
  * @param {object containing position data} position
  */
 function handlePosition(position) {
-  const lat = position.coords.latitude;
-  const lng = position.coords.longitude;
-
-  const geocoder = new google.maps.Geocoder();
   const latlng = {
-    lat: lat,
-    lng: lng,
+    lat: position.coords.latitude,
+    lng: position.coords.longitude,
   };
+  const geocoder = new google.maps.Geocoder();
+
   geocoder
     .geocode({ location: latlng })
     .then((response) => {
       if (response.results[0]) {
-        console.log(response);
+        // response contains something!
+        // now we want to iterate through the results (each is an object with a long_name, short_name, and types array)
+        // we will try to find an object which has a country type
+        // if the short_name of this country type is CA (Canada), ES (Spain), or US (United States),
+        // we will then also look for an object which has an administrative_area_level_1 type
+        // we will then set the country and state globals accordingly
+        let result;
+        for (const result of response.results) {
+          if (result.types.includes('country')) {
+            country = result.short_name;
+            console.log(country);
+            break;
+          }
+        }
+        if (country === 'CA' || country === 'ES' || country === 'US') {
+          for (const result of response.results) {
+            if (result.types.includes('administrative_area_level_1')) {
+              state = result.short_name;
+              console.log(state);
+              break;
+            }
+          }
+        } else if (typeof country === 'undefined') {
+          console.log(
+            'No country found in response. Using California, United States.'
+          );
+        }
       } else {
-        console.log('no results');
       }
     })
     .catch((e) => {
