@@ -188,15 +188,17 @@ function handlePosition(position) {
     .then((response) => {
       if (response.results[0]) {
         // response contains something!
-        // now we want to iterate through the results (each is an object with a long_name, short_name, and types array)
+        // now we want to iterate through the results
         // we will try to find an object which has a country type
-        // if the short_name of this country type is CA (Canada), ES (Spain), or US (United States),
+        // if the short_name (found in address_components, which has its own types array) of this country type
+        // is CA (Canada), ES (Spain), or US (United States),
         // we will then also look for an object which has an administrative_area_level_1 type
-        // we will then set the country and state globals accordingly
+        // and find the short_name for the state
+        // we will then set the country, state, and tax rate globals accordingly
         let result;
         for (const result of response.results) {
           if (result.types.includes('country')) {
-            country = result.short_name;
+            country = result.address_components[0].short_name;
             console.log(country);
             break;
           }
@@ -204,11 +206,14 @@ function handlePosition(position) {
         if (country === 'CA' || country === 'ES' || country === 'US') {
           for (const result of response.results) {
             if (result.types.includes('administrative_area_level_1')) {
-              state = result.short_name;
+              state = result.address_components[0].short_name;
               console.log(state);
               taxRate = salesTaxRates[country]['states'][state].rate;
               break;
             }
+          }
+          if (typeof state === 'undefined') {
+            taxRate = salesTaxRates[country].rate;
           }
         } else if (typeof country === 'undefined') {
           console.log(
@@ -219,6 +224,9 @@ function handlePosition(position) {
         }
         console.log('Tax rate is ' + taxRate + '.');
       } else {
+        console.log(
+          'No data returned in response. Using California, United States.'
+        );
       }
     })
     .catch((e) => {
