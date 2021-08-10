@@ -1,8 +1,20 @@
 //TODO: multiple boba costs, custom orders
 //TODO: account for website discounts
-//TODO: use user location to calculate local tax and display local currency
+//TODO: use user location to
+//      calculate local tax [done]
+//      display local currency [in progress, need currency symbols]
+//      use local boba prices [not started]
 
+const FREE_CURRENCY_CONVERTER_API_KEY = '6e3d2e76eb2a6847a5de';
 const BOBA_COST = 5; // assuming $5 bobas
+
+// l10n globals
+let country = 'US';
+let state = 'CA';
+let currency = 'USD';
+let taxRate = salesTaxRates[country]['states'][state].rate;
+let conversionRate = 1;
+
 const urlQueryString = window.location.search;
 const urlParams = new URLSearchParams(urlQueryString);
 
@@ -64,10 +76,6 @@ const topping2 = toppings[topping2Param]
   : 'none';
 const topping2Price = topping2 !== 'none' ? toppings[topping2Param].PRICE : 0;
 
-// not sure if we need these globals yet
-/*let country;
-let state;*/
-
 /**
  * @param {array of domain objects} domains
  * @returns total cost of all domains
@@ -91,7 +99,8 @@ function costToBobas(
   topping1Price,
   topping2Price
 ) {
-  const bobaPrice = flavorPrice + sizePrice + topping1Price + topping2Price;
+  const bobaPrice =
+    (flavorPrice + sizePrice + topping1Price + topping2Price) * (1.0 + taxRate);
   return cost / bobaPrice;
 }
 
@@ -103,9 +112,12 @@ function generateTotalCost(domains) {
   const totalCostText = document.createElement('h2');
   totalCostText.id = 'total-cost-header';
   const totalCost = calcDomainsCost(domains);
+  console.log(totalCost * conversionRate);
   totalCostText.innerHTML =
-    'Enough is enough. Matt spends<br/><span id="cost">$' +
-    totalCost +
+    'Enough is enough. Matt spends<br/><span id="cost">' +
+    (totalCost * conversionRate).toFixed(2) +
+    ' ' +
+    currency +
     '</span><br/>on domains every year. ' +
     'That\'s enough to buy<br/><span id="total-num-bobas">' +
     costToBobas(
@@ -173,41 +185,120 @@ function generateCards(domains) {
 }
 
 /**
+ * sets conversion rate global using free currency converter api
+ * @param {callback function} callback
+ */
+async function getConversionRate(callback) {
+  currency = countryToCurrency[country].currency;
+  const query = 'USD_' + currency;
+  const url =
+    'https://free.currconv.com/api/v7/convert?q=' +
+    query +
+    '&compact=ultra&apiKey=' +
+    FREE_CURRENCY_CONVERTER_API_KEY;
+  const response = await fetch(url);
+  const result = await response.json();
+  conversionRate = result[query];
+  console.log('Conversion rate is ' + conversionRate + '.');
+  callback();
+}
+
+/**
  * callback function for getCurrentPosition
  * @param {object containing position data} position
  */
-function handlePosition(position) {
-  const lat = position.coords.latitude;
-  const lng = position.coords.longitude;
-
-  const geocoder = new google.maps.Geocoder();
+function handleL10n(position) {
   const latlng = {
-    lat: lat,
-    lng: lng,
+    lat: position.coords.latitude,
+    lng: position.coords.longitude,
   };
+  const geocoder = new google.maps.Geocoder();
+
   geocoder
     .geocode({ location: latlng })
     .then((response) => {
       if (response.results[0]) {
-        console.log(response);
+        // response contains something!
+        // now we want to iterate through the results
+        // we will try to find an object which has a country type
+        // if the short_name (found in address_components, which has its own types array)
+        // of this country type is CA (Canada), ES (Spain), or US (United States),
+        // we will then also look for an object which has an administrative_area_level_1 type
+        // and find the short_name for the state
+        // we will then set the country, state, and tax rate globals accordingly
+        for (const result of response.results) {
+          if (result.types.includes('country')) {
+            country = result.address_components[0].short_name;
+            console.log(country);
+            break;
+          }
+        }
+        if (country === 'CA' || country === 'ES' || country === 'US') {
+          for (const result of response.results) {
+            if (result.types.includes('administrative_area_level_1')) {
+              state = result.address_components[0].short_name;
+              console.log(state);
+              taxRate = salesTaxRates[country]['states'][state].rate;
+              break;
+            }
+          }
+          if (typeof state === 'undefined') {
+            taxRate = salesTaxRates[country].rate;
+          }
+          // set conversion rate based on location and display everything
+          getConversionRate(setDisplay);
+        } else if (typeof country === 'undefined') {
+          console.log(
+            'No country found in response. Using California, United States.'
+          );
+          // display everything (with default values)
+          setDisplay();
+        } else {
+          taxRate = salesTaxRates[country].rate;
+          // set conversion rate based on location and display everything
+          getConversionRate(setDisplay);
+        }
+        console.log('Tax rate is ' + taxRate + '.');
       } else {
-        console.log('no results');
+        console.log(
+          'No data returned in response. Using California, United States.'
+        );
+        // display everything (with default values)
+        setDisplay();
       }
     })
     .catch((e) => {
       console.log(e);
+      // display everything (with default values)
+      setDisplay();
     });
 }
 
 /**
  * called when the body is loaded
- * @param {array of domain objects} domains
  */
-function onloadPopulate(domains) {
+function onloadPopulate() {
   if ('geolocation' in navigator) {
     // geolocation is available
-    navigator.geolocation.getCurrentPosition(handlePosition);
+    navigator.geolocation.getCurrentPosition(handleL10n, (e) => {
+      if (e.code == e.PERMISSION_DENIED) {
+        console.log('User has blocked location services.');
+      }
+      setDisplay();
+    });
+  } else {
+    setDisplay();
   }
-  document.getElementById('total-cost').appendChild(generateTotalCost(domains));
-  document.getElementById('cost-breakdown').appendChild(generateCards(domains));
+}
+
+/**
+ * displays everything
+ */
+function setDisplay() {
+  document
+    .getElementById('total-cost')
+    .appendChild(generateTotalCost(domainsList));
+  document
+    .getElementById('cost-breakdown')
+    .appendChild(generateCards(domainsList));
 }
