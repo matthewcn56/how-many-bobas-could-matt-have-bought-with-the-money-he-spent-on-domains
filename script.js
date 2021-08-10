@@ -112,9 +112,10 @@ function generateTotalCost(domains) {
   const totalCostText = document.createElement('h2');
   totalCostText.id = 'total-cost-header';
   const totalCost = calcDomainsCost(domains);
+  console.log(totalCost * conversionRate);
   totalCostText.innerHTML =
     'Enough is enough. Matt spends<br/><span id="cost">' +
-    totalCost * conversionRate +
+    (totalCost * conversionRate).toFixed(2) +
     ' ' +
     currency +
     '</span><br/>on domains every year. ' +
@@ -185,8 +186,9 @@ function generateCards(domains) {
 
 /**
  * sets conversion rate global using free currency converter api
+ * @param {callback function} callback
  */
-async function getConversionRate() {
+async function getConversionRate(callback) {
   currency = countryToCurrency[country].currency;
   const query = 'USD_' + currency;
   const url =
@@ -198,6 +200,7 @@ async function getConversionRate() {
   const result = await response.json();
   conversionRate = result[query];
   console.log('Conversion rate is ' + conversionRate + '.');
+  callback();
 }
 
 /**
@@ -243,7 +246,7 @@ function handleL10n(position) {
             taxRate = salesTaxRates[country].rate;
           }
           // set conversion rate based on location and display everything
-          getConversionRate().then(setDisplay());
+          getConversionRate(setDisplay);
         } else if (typeof country === 'undefined') {
           console.log(
             'No country found in response. Using California, United States.'
@@ -253,7 +256,7 @@ function handleL10n(position) {
         } else {
           taxRate = salesTaxRates[country].rate;
           // set conversion rate based on location and display everything
-          getConversionRate().then(setDisplay());
+          getConversionRate(setDisplay);
         }
         console.log('Tax rate is ' + taxRate + '.');
       } else {
@@ -278,8 +281,9 @@ function onloadPopulate() {
   if ('geolocation' in navigator) {
     // geolocation is available
     navigator.geolocation.getCurrentPosition(handleL10n, (e) => {
-      if (e.code == e.PERMISSION_DENIED)
+      if (e.code == e.PERMISSION_DENIED) {
         console.log('User has blocked location services.');
+      }
       setDisplay();
     });
   } else {
@@ -287,6 +291,9 @@ function onloadPopulate() {
   }
 }
 
+/**
+ * displays everything
+ */
 function setDisplay() {
   document
     .getElementById('total-cost')
