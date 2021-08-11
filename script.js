@@ -1,11 +1,13 @@
-//TODO: multiple boba costs, custom orders
-//TODO: account for website discounts
-//TODO: use user location to
-//      calculate local tax [done]
-//      display local currency [in progress, need currency symbols]
-//      use local boba prices [not started]
+// TODO: multiple boba costs, custom orders
+// TODO: use localstorage to hold custom order
+// TODO: account for website discounts
+// TODO: use user location to
+//       calculate local tax [done]
+//       display local currency [in progress, need currency symbols]
+//       use local boba prices [not started]
+// TODO: load USD initially, reload/update if country/state is different from US/California
 
-const FREE_CURRENCY_CONVERTER_API_KEY = '6e3d2e76eb2a6847a5de';
+const FREE_CURRENCY_CONVERTER_API_KEY = '6e3d2e76eb2a6847a5de'; // dtjanaka
 const BOBA_COST = 5; // assuming $5 bobas
 
 // l10n globals
@@ -212,6 +214,7 @@ function handleL10n(position) {
     lat: position.coords.latitude,
     lng: position.coords.longitude,
   };
+
   const geocoder = new google.maps.Geocoder();
 
   geocoder
@@ -301,4 +304,36 @@ function setDisplay() {
   document
     .getElementById('cost-breakdown')
     .appendChild(generateCards(domainsList));
+}
+
+/**
+ * https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API/Using_the_Web_Storage_API
+ * @param {string} type
+ * @returns bool
+ */
+function storageAvailable(type) {
+  let storage;
+  try {
+    storage = window[type];
+    var x = '__storage_test__';
+    storage.setItem(x, x);
+    storage.removeItem(x);
+    return true;
+  } catch (e) {
+    return (
+      e instanceof DOMException &&
+      // everything except Firefox
+      (e.code === 22 ||
+        // Firefox
+        e.code === 1014 ||
+        // test name field too, because code might not be present
+        // everything except Firefox
+        e.name === 'QuotaExceededError' ||
+        // Firefox
+        e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+      // acknowledge QuotaExceededError only if there's something already stored
+      storage &&
+      storage.length !== 0
+    );
+  }
 }
