@@ -1,3 +1,4 @@
+// https://github.com/srcagency/country-currencies/blob/master/data.json
 const countryToCurrency = {
   AD: { currency: 'EUR' },
   AE: { currency: 'AED' },
