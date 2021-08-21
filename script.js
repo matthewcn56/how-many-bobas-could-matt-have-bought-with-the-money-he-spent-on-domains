@@ -215,7 +215,7 @@ function generateBobaMaker() {
   bobaSection.id = 'boba-section';
   const bobaHeader = document.createElement('div');
   bobaHeader.id = 'boba-header';
-  bobaHeader.innerText = 'Generate Your Own Boba Order';
+  bobaHeader.innerText = 'Customize Your Boba Order';
   bobaSection.appendChild(bobaHeader);
   const bobaCustomizer = document.createElement('form');
 
