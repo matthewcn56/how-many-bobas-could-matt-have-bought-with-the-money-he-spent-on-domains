@@ -29,6 +29,10 @@ const domainsList = [
     cost: 1.17,
   },
   {
+    site: 'http://liangchifan.club/',
+    cost: 1.17,
+  },
+  {
     site: 'https://matthewwang.me/',
     cost: 10.86,
   },
