@@ -25,6 +25,10 @@ const domainsList = [
     cost: 1.17,
   },
   {
+    site: 'http://jennyfan.club/',
+    cost: 1.17,
+  },
+  {
     site: 'https://matthewwang.me/',
     cost: 10.86,
   },
