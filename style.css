@@ -23,6 +23,12 @@ h1 {
   padding: 0;
 }
 
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
 h2 {
   font-size: 24px;
   margin-top: 16px;
@@ -55,6 +61,18 @@ a {
 
 #total-cost-header {
   text-align: center;
+}
+
+#boba-section {
+  text-align: center;
+  background-color: #b8ddf5;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+#boba-header {
+  font-weight: 600;
+  font-size: 24px;
 }
 
 #cost,
