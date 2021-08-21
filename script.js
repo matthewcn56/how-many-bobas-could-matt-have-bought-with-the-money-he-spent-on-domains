@@ -24,6 +24,7 @@ const sizes = {
   SMALL: 'small',
   LARGE: 'large',
 };
+const sizeOptions = Object.keys(sizes);
 
 const SMALL_PRICE = 0;
 const UPCHARGE_PRICE = 0.5;
@@ -43,6 +44,8 @@ const flavors = {
   },
 };
 
+const flavorOptions = Object.keys(flavors);
+const NUM_TOPPINGS = 2;
 const toppings = {
   BOBA: {
     NAME: 'pearls',
@@ -52,7 +55,17 @@ const toppings = {
     NAME: 'cheese foam',
     PRICE: 1.5,
   },
+  ALOE: {
+    NAME: 'aloe',
+    PRICE: 0.5,
+  },
+  RED_BEAN: {
+    NAME: 'red beans',
+    PRICE: 0.5,
+  },
 };
+
+const toppingsOptions = Object.keys(toppings);
 
 let flavorParam = urlParams.get('flavor');
 flavorParam = flavors[flavorParam] ? flavorParam : 'WINTERMELON';
@@ -64,13 +77,16 @@ const size = sizes[sizeParam] ? sizes[sizeParam] : 'small';
 let sizePrice = SMALL_PRICE;
 sizePrice += size === 'large' ? UPCHARGE_PRICE : 0;
 
+const toppingParams = [];
 const topping1Param = urlParams.get('topping1');
+toppingParams.push(topping1Param);
 const topping1 = toppings[topping1Param]
   ? toppings[topping1Param].NAME
   : 'none';
 const topping1Price = topping1 !== 'none' ? toppings[topping1Param].PRICE : 0;
 
 const topping2Param = urlParams.get('topping2');
+toppingParams.push(topping2Param);
 const topping2 = toppings[topping2Param]
   ? toppings[topping2Param].NAME
   : 'none';
@@ -129,8 +145,16 @@ function generateTotalCost(domains) {
     ).toFixed(1) +
     '</span><br/>';
   totalCostText.innerHTML += size + ' ' + flavor + ' bobas';
-  if (topping1 != 'none') totalCostText.innerHTML += ' with ' + topping1;
-  if (topping2 != 'none') totalCostText.innerHTML += ' and ' + topping2;
+  if (topping1 !== 'none') totalCostText.innerHTML += ' with ' + topping1;
+  if (topping2 !== 'none') {
+    if (topping1 === 'none') {
+      totalCostText.innerHTML += ' with ' + topping2;
+    } else {
+      totalCostText.innerHTML += ' and ';
+      if (topping1 === topping2) totalCostText.innerHTML += 'extra ';
+      totalCostText.innerHTML += topping2;
+    }
+  }
   return totalCostText;
 }
 
@@ -180,8 +204,107 @@ function generateCards(domains) {
   for (let i = 0; i < domains.length; i++) {
     cards.appendChild(generateCardFromObject(domains[i]));
   }
-
   return cards;
+}
+/**
+ * generates dropdown to give option of generating bobas, using
+ * flavor, size, topping1, topping2 which is given from the URL Parameters
+ */
+function generateBobaMaker() {
+  const bobaSection = document.createElement('div');
+  bobaSection.id = 'boba-section';
+  const bobaHeader = document.createElement('div');
+  bobaHeader.id = 'boba-header';
+  bobaHeader.innerText = 'Generate Your Own Boba Order';
+  bobaSection.appendChild(bobaHeader);
+  const bobaCustomizer = document.createElement('form');
+
+  //size label
+  const sizeLabel = document.createElement('label');
+  sizeLabel.for = 'size-select';
+  sizeLabel.innerText = 'size: ';
+  //size select
+  const sizeSelect = document.createElement('select');
+  sizeSelect.id = 'size-select';
+  sizeSelect.name = 'size';
+  //size options
+  for (const option of sizeOptions) {
+    const currOption = document.createElement('option');
+    if (sizeParam === option) currOption.selected = true;
+    currOption.value = option;
+    currOption.innerText = sizes[option];
+    sizeSelect.appendChild(currOption);
+  }
+
+  //flavor label
+  const flavorLabel = document.createElement('label');
+  flavorLabel.for = 'flavor-select';
+  flavorLabel.innerText = 'flavor: ';
+
+  //flavor select
+  const flavorSelect = document.createElement('select');
+  flavorSelect.id = 'flavor-select';
+  flavorSelect.name = 'flavor';
+
+  //flavor options
+  for (const option of flavorOptions) {
+    const currOption = document.createElement('option');
+    if (flavorParam === option) currOption.selected = true;
+    currOption.value = option;
+    const optName = flavors[option].NAME.split(' milk')[0];
+    currOption.innerText = optName;
+    flavorSelect.appendChild(currOption);
+  }
+  bobaCustomizer.appendChild(sizeLabel);
+  bobaCustomizer.appendChild(sizeSelect);
+  bobaCustomizer.appendChild(flavorLabel);
+  bobaCustomizer.appendChild(flavorSelect);
+  //handle num toppings, with each one being represented as toppingN
+  for (let i = 1; i <= NUM_TOPPINGS; i++) {
+    const currTopping = 'topping' + i;
+    const currToppingKey = toppingParams.shift();
+
+    //curr topping label
+    const currLabel = document.createElement('label');
+    const currToppingID = currTopping + '-select';
+    currLabel.for = currToppingID;
+    currLabel.innerText = 'topping ' + i + ':';
+
+    //curr topping select
+    const currSelect = document.createElement('select');
+    currSelect.id = currToppingID;
+    currSelect.name = currTopping;
+
+    //topping options
+    for (const option of toppingsOptions) {
+      console.log('curr option is: ' + option);
+      const currOption = document.createElement('option');
+      if (currToppingKey === option) currOption.selected = true;
+      currOption.value = option;
+      const optName = toppings[option].NAME;
+      currOption.innerText = optName;
+      currSelect.appendChild(currOption);
+    }
+
+    //add the none option
+    const noneOption = document.createElement('option');
+    noneOption.value = 'none';
+    noneOption.innerText = 'none';
+    if (!currToppingKey || currToppingKey === 'none')
+      noneOption.selected = true;
+    currSelect.appendChild(noneOption);
+    bobaCustomizer.appendChild(currLabel);
+    bobaCustomizer.appendChild(currSelect);
+  }
+  //submit button
+  const bobaSubmit = document.createElement('input');
+  bobaSubmit.type = 'submit';
+  bobaSubmit.value = 'Order';
+  bobaCustomizer.appendChild(bobaSubmit);
+
+  bobaSection.appendChild(bobaCustomizer);
+  //console.log(bobaCustomizer);
+  return bobaSection;
 }
 
 /**
@@ -301,4 +424,5 @@ function setDisplay() {
   document
     .getElementById('cost-breakdown')
     .appendChild(generateCards(domainsList));
+  document.getElementById('custom-boba').appendChild(generateBobaMaker());
 }
