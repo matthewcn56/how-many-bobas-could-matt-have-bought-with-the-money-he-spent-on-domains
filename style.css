@@ -15,7 +15,6 @@ option {
   font-family: 'Poppins', sans-serif;
 }
 
-/*TODO: use relative units instead*/
 h1 {
   font-size: 40px;
   margin-top: 20px;
@@ -92,12 +91,6 @@ a {
   text-align: center;
 }
 
-.card-site-name {
-}
-
-.card-boba-count {
-}
-
 /* Responsiveness */
 @media only screen and (max-width: 1000px) {
   #content {
@@ -108,6 +101,9 @@ a {
 @media only screen and (max-width: 600px) {
   #content {
     width: 100%;
+  }
+  h3 {
+    font-size: 14px;
   }
 }
 /* Responsiveness */
