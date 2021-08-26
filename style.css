@@ -13,6 +13,7 @@ input,
 select,
 option {
   font-family: 'Poppins', sans-serif;
+  cursor: pointer;
 }
 
 /*TODO: use relative units instead*/
@@ -96,6 +97,10 @@ a {
 }
 
 .card-boba-count {
+}
+
+.card-site-name > a:hover {
+  text-decoration: underline;
 }
 
 /* Responsiveness */
