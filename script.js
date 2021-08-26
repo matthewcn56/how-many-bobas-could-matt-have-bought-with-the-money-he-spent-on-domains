@@ -125,36 +125,22 @@ function costToBobas(
  * @returns header for total cost
  */
 function generateTotalCost(domains) {
-  const totalCostText = document.createElement('h2');
-  totalCostText.id = 'total-cost-header';
-  const totalCost = calcDomainsCost(domains);
-  console.log(totalCost * conversionRate);
-  totalCostText.innerHTML =
-    'Enough is enough. Matt spends<br/><span id="cost">' +
-    (totalCost * conversionRate).toFixed(2) +
-    ' ' +
-    currency +
-    '</span><br/>on domains every year. ' +
-    'That\'s enough to buy<br/><span id="total-num-bobas">' +
-    costToBobas(
-      calcDomainsCost(domains),
-      flavorPrice,
-      sizePrice,
-      topping1Price,
-      topping2Price
-    ).toFixed(1) +
-    '</span><br/>';
-  totalCostText.innerHTML += size + ' ' + flavor + ' bobas';
-  if (topping1 !== 'none') totalCostText.innerHTML += ' with ' + topping1;
-  if (topping2 !== 'none') {
-    if (topping1 === 'none') {
-      totalCostText.innerHTML += ' with ' + topping2;
-    } else {
-      totalCostText.innerHTML += ' and ';
-      if (topping1 === topping2) totalCostText.innerHTML += 'extra ';
-      totalCostText.innerHTML += topping2;
-    }
-  }
+  // Get total cost of bobas and convert to local currency
+  const totalCost = calcDomainsCost(domains)
+  const convertedCost = totalCost * conversionRate
+
+  // Use this to get number of bobas
+  const numBobas = costToBobas(
+                      calcDomainsCost(domains),
+                      flavorPrice,
+                      sizePrice,
+                      topping1Price,
+                      topping2Price
+                    ).toFixed(1)
+
+  // Create total cost element and return it
+  const totalCostText = new TotalCost(convertedCost, numBobas, size, 
+                        flavor, topping1, topping2)
   return totalCostText;
 }
 
@@ -163,12 +149,6 @@ function generateTotalCost(domains) {
  * @returns div for a card
  */
 function generateCardFromObject(domain) {
-  const cardContainer = document.createElement('div');
-  const cardSiteName = document.createElement('h3');
-  const cardBobaCount = document.createElement('h2');
-
-  cardContainer.className = 'card-container';
-
   const numBobas = costToBobas(
     domain.cost,
     flavorPrice,
@@ -177,20 +157,9 @@ function generateCardFromObject(domain) {
     topping2Price
   ).toFixed(1);
 
-  cardSiteName.innerHTML =
-    'Instead of buying <a href="' + domain.site + '">' + domain.site + '</a>,';
-  cardSiteName.className = 'card-site-name';
-  cardBobaCount.innerHTML =
-    'Matt could have bought ' +
-    numBobas +
-    (numBobas === 1 ? ' boba' : ' bobas') +
-    ' this year.';
-  cardBobaCount.className = 'card-boba-count';
-
-  cardContainer.appendChild(cardSiteName);
-  cardContainer.appendChild(cardBobaCount);
-
-  return cardContainer;
+  // Return a Boba card component
+  const card = new BobaCard(domain, numBobas);
+  return card;
 }
 
 /**
@@ -211,99 +180,33 @@ function generateCards(domains) {
  * flavor, size, topping1, topping2 which is given from the URL Parameters
  */
 function generateBobaMaker() {
-  const bobaSection = document.createElement('div');
-  bobaSection.id = 'boba-section';
-  const bobaHeader = document.createElement('div');
-  bobaHeader.id = 'boba-header';
-  bobaHeader.innerText = 'Customize Your Boba Order';
-  bobaSection.appendChild(bobaHeader);
-  const bobaCustomizer = document.createElement('form');
-
-  //size label
-  const sizeLabel = document.createElement('label');
-  sizeLabel.for = 'size-select';
-  sizeLabel.innerText = 'size: ';
-  //size select
-  const sizeSelect = document.createElement('select');
-  sizeSelect.id = 'size-select';
-  sizeSelect.name = 'size';
-  //size options
-  for (const option of sizeOptions) {
-    const currOption = document.createElement('option');
-    if (sizeParam === option) currOption.selected = true;
-    currOption.value = option;
-    currOption.innerText = sizes[option];
-    sizeSelect.appendChild(currOption);
+  
+  // Create an array of possible boba options
+  const bobaOptions = {
+    size: sizeOptions,
+    flavor: flavorOptions,
+    toppings: toppingsOptions,
   }
-
-  //flavor label
-  const flavorLabel = document.createElement('label');
-  flavorLabel.for = 'flavor-select';
-  flavorLabel.innerText = 'flavor: ';
-
-  //flavor select
-  const flavorSelect = document.createElement('select');
-  flavorSelect.id = 'flavor-select';
-  flavorSelect.name = 'flavor';
-
-  //flavor options
-  for (const option of flavorOptions) {
-    const currOption = document.createElement('option');
-    if (flavorParam === option) currOption.selected = true;
-    currOption.value = option;
-    const optName = flavors[option].NAME.split(' milk')[0];
-    currOption.innerText = optName;
-    flavorSelect.appendChild(currOption);
-  }
-  bobaCustomizer.appendChild(sizeLabel);
-  bobaCustomizer.appendChild(sizeSelect);
-  bobaCustomizer.appendChild(flavorLabel);
-  bobaCustomizer.appendChild(flavorSelect);
-  //handle num toppings, with each one being represented as toppingN
-  for (let i = 1; i <= NUM_TOPPINGS; i++) {
-    const currTopping = 'topping' + i;
-    const currToppingKey = toppingParams.shift();
-
-    //curr topping label
-    const currLabel = document.createElement('label');
-    const currToppingID = currTopping + '-select';
-    currLabel.for = currToppingID;
-    currLabel.innerText = 'topping ' + i + ':';
-
-    //curr topping select
-    const currSelect = document.createElement('select');
-    currSelect.id = currToppingID;
-    currSelect.name = currTopping;
-
-    //topping options
-    for (const option of toppingsOptions) {
-      console.log('curr option is: ' + option);
-      const currOption = document.createElement('option');
-      if (currToppingKey === option) currOption.selected = true;
-      currOption.value = option;
-      const optName = toppings[option].NAME;
-      currOption.innerText = optName;
-      currSelect.appendChild(currOption);
+  
+  // NOTE: We hardcode the size lookup table
+  // as this is in a different format from the rest
+  const sizeTable = {
+    SMALL: {
+      NAME: 'small'
+    },
+    LARGE: {
+      NAME: 'large'
     }
-
-    //add the none option
-    const noneOption = document.createElement('option');
-    noneOption.value = 'none';
-    noneOption.innerText = 'none';
-    if (!currToppingKey || currToppingKey === 'none')
-      noneOption.selected = true;
-    currSelect.appendChild(noneOption);
-    bobaCustomizer.appendChild(currLabel);
-    bobaCustomizer.appendChild(currSelect);
   }
-  //submit button
-  const bobaSubmit = document.createElement('input');
-  bobaSubmit.type = 'submit';
-  bobaSubmit.value = 'Order';
-  bobaCustomizer.appendChild(bobaSubmit);
-
-  bobaSection.appendChild(bobaCustomizer);
-  //console.log(bobaCustomizer);
+  // Look up tables to look up values
+  const lookupTables = {
+    size: sizeTable,
+    flavor: flavors,
+    toppings: toppings,
+  }
+  
+  // Create and return a new boba section
+  const bobaSection = new BobaMaker(bobaOptions, lookupTables)
   return bobaSection;
 }
 
