@@ -217,16 +217,19 @@ function generateBobaMaker() {
   bobaHeader.id = 'boba-header';
   bobaHeader.innerText = 'Customize Your Boba Order';
   bobaSection.appendChild(bobaHeader);
+
   const bobaCustomizer = document.createElement('form');
 
   //size label
   const sizeLabel = document.createElement('label');
   sizeLabel.for = 'size-select';
   sizeLabel.innerText = 'size: ';
+
   //size select
   const sizeSelect = document.createElement('select');
   sizeSelect.id = 'size-select';
   sizeSelect.name = 'size';
+
   //size options
   for (const option of sizeOptions) {
     const currOption = document.createElement('option');
@@ -255,10 +258,18 @@ function generateBobaMaker() {
     currOption.innerText = optName;
     flavorSelect.appendChild(currOption);
   }
-  bobaCustomizer.appendChild(sizeLabel);
-  bobaCustomizer.appendChild(sizeSelect);
-  bobaCustomizer.appendChild(flavorLabel);
-  bobaCustomizer.appendChild(flavorSelect);
+
+  const sizeSelectContainer = document.createElement('div');
+  sizeSelectContainer.appendChild(sizeLabel);
+  sizeSelectContainer.appendChild(sizeSelect);
+
+  const flavorSelectContainer = document.createElement('div');
+  flavorSelectContainer.appendChild(flavorLabel);
+  flavorSelectContainer.appendChild(flavorSelect);
+
+  bobaCustomizer.appendChild(sizeSelectContainer);
+  bobaCustomizer.appendChild(flavorSelectContainer);
+
   //handle num toppings, with each one being represented as toppingN
   for (let i = 1; i <= NUM_TOPPINGS; i++) {
     const currTopping = 'topping' + i;
@@ -293,9 +304,14 @@ function generateBobaMaker() {
     if (!currToppingKey || currToppingKey === 'none')
       noneOption.selected = true;
     currSelect.appendChild(noneOption);
-    bobaCustomizer.appendChild(currLabel);
-    bobaCustomizer.appendChild(currSelect);
+
+    const toppingSelectContainer = document.createElement('div');
+    toppingSelectContainer.appendChild(currLabel);
+    toppingSelectContainer.appendChild(currSelect);
+
+    bobaCustomizer.appendChild(toppingSelectContainer);
   }
+
   //submit button
   const bobaSubmit = document.createElement('input');
   bobaSubmit.type = 'submit';
@@ -303,7 +319,6 @@ function generateBobaMaker() {
   bobaCustomizer.appendChild(bobaSubmit);
 
   bobaSection.appendChild(bobaCustomizer);
-  //console.log(bobaCustomizer);
   return bobaSection;
 }
 
