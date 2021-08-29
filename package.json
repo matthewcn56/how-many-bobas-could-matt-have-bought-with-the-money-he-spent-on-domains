@@ -11,7 +11,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "format": "prettier --write *.{js,css,html}",
+    "format": "prettier --write \"**/*.{js,css,html}\"",
     "lint-staged": "lint-staged"
   },
   "lint-staged": {

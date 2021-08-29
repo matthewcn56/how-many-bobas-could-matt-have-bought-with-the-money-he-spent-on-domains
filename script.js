@@ -126,21 +126,27 @@ function costToBobas(
  */
 function generateTotalCost(domains) {
   // Get total cost of bobas and convert to local currency
-  const totalCost = calcDomainsCost(domains)
-  const convertedCost = totalCost * conversionRate
+  const totalCost = calcDomainsCost(domains);
+  const convertedCost = totalCost * conversionRate;
 
   // Use this to get number of bobas
   const numBobas = costToBobas(
-                      calcDomainsCost(domains),
-                      flavorPrice,
-                      sizePrice,
-                      topping1Price,
-                      topping2Price
-                    ).toFixed(1)
+    calcDomainsCost(domains),
+    flavorPrice,
+    sizePrice,
+    topping1Price,
+    topping2Price
+  ).toFixed(1);
 
   // Create total cost element and return it
-  const totalCostText = new TotalCost(convertedCost, numBobas, size, 
-                        flavor, topping1, topping2)
+  const totalCostText = new TotalCost(
+    convertedCost,
+    numBobas,
+    size,
+    flavor,
+    topping1,
+    topping2
+  );
   return totalCostText;
 }
 
@@ -180,33 +186,32 @@ function generateCards(domains) {
  * flavor, size, topping1, topping2 which is given from the URL Parameters
  */
 function generateBobaMaker() {
-  
   // Create an array of possible boba options
   const bobaOptions = {
     size: sizeOptions,
     flavor: flavorOptions,
     toppings: toppingsOptions,
-  }
-  
+  };
+
   // NOTE: We hardcode the size lookup table
   // as this is in a different format from the rest
   const sizeTable = {
     SMALL: {
-      NAME: 'small'
+      NAME: 'small',
     },
     LARGE: {
-      NAME: 'large'
-    }
-  }
+      NAME: 'large',
+    },
+  };
   // Look up tables to look up values
   const lookupTables = {
     size: sizeTable,
     flavor: flavors,
     toppings: toppings,
-  }
-  
+  };
+
   // Create and return a new boba section
-  const bobaSection = new BobaMaker(bobaOptions, lookupTables)
+  const bobaSection = new BobaMaker(bobaOptions, lookupTables);
   return bobaSection;
 }
 
