@@ -7,30 +7,34 @@ class BobaMaker extends HTMLElement {
       <div id="boba-section">
         <div id="boba-header">Customize Your Boba Order</div>
         <form>
-          <label for="size-select">size:</label>
-          <select name="size" id="size-select">${this.createOptions(
-            options.size,
-            lookupTables.size
-          )}</select>
+          <label>size:
+            <select name="size" id="size-select">${this.createOptions(
+              options.size,
+              lookupTables.size
+            )}</select>
+          </label>
 
-          <label for="flavor-select">flavor:</label>
+          <label>flavor:
           <select name="flavor" id="flavor-select">${this.createOptions(
             options.flavor,
             lookupTables.flavor,
             'flavor'
           )}</select>
+          </label>
 
-          <label for="topping1-select">topping1:</label>
-          <select name="topping1" id="topping1-select">${this.createOptions(
-            options.toppings,
-            lookupTables.toppings
-          )}</select>
+          <label>topping1:
+            <select name="topping1" id="topping1-select">${this.createOptions(
+              options.toppings,
+              lookupTables.toppings
+            )}</select>
+          </label>
 
-          <label for="topping2-select">topping2:</label>
-          <select name="topping2" id="topping2-select">${this.createOptions(
-            options.toppings,
-            lookupTables.toppings
-          )}</select>
+          <label>topping2:
+            <select name="topping2" id="topping2-select">${this.createOptions(
+              options.toppings,
+              lookupTables.toppings
+            )}</select>
+          </label>
 
           <input type="submit" value="Order">
         </form>
