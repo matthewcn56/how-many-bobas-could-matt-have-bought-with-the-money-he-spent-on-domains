@@ -215,12 +215,35 @@ function generateBobaMaker() {
   return bobaSection;
 }
 
+function isDayOld(date) {
+  const twentyFourHours = 1000 * 60 * 60 * 24
+  const dayAgo = Date.now() - twentyFourHours
+
+  return twentyFourHours > date
+}
+
 /**
  * sets conversion rate global using free currency converter api
  * @param {callback function} callback
  */
 async function getConversionRate(callback) {
   currency = countryToCurrency[country].currency;
+
+  // Check if currency is in storage
+  let cache = localStorage.getItem(currency)
+
+  // If currency not in storage, returns null
+  // Otherwise, it returns an object, which we parse
+  if (cache) cache = JSON.parse(cache)
+
+  // Check if cached object exists and 
+  // make sure it's not more than a day old
+  if (cache && !isDayOld(cache.date)) {
+    conversionRate = cache.conversionRate
+    callback()
+    return
+  }
+
   const query = 'USD_' + currency;
   const url =
     'https://free.currconv.com/api/v7/convert?q=' +
@@ -230,6 +253,13 @@ async function getConversionRate(callback) {
   const response = await fetch(url);
   const result = await response.json();
   conversionRate = result[query];
+
+  // Add conversation rate
+  localStorage.setItem(currency, JSON.stringify({
+    date: Date.now(),
+    conversionRate,
+  }))
+
   console.log('Conversion rate is ' + conversionRate + '.');
   callback();
 }
