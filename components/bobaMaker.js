@@ -10,7 +10,8 @@ class BobaMaker extends HTMLElement {
           <label>size:
             <select name="size" id="size-select">${this.createOptions(
               options.size,
-              lookupTables.size
+              lookupTables.size,
+              'size'
             )}</select>
           </label>
 
@@ -25,14 +26,16 @@ class BobaMaker extends HTMLElement {
           <label>topping1:
             <select name="topping1" id="topping1-select">${this.createOptions(
               options.toppings,
-              lookupTables.toppings
+              lookupTables.toppings,
+              'toppings'
             )}</select>
           </label>
 
           <label>topping2:
             <select name="topping2" id="topping2-select">${this.createOptions(
               options.toppings,
-              lookupTables.toppings
+              lookupTables.toppings,
+              'toppings'
             )}</select>
           </label>
 
@@ -43,6 +46,7 @@ class BobaMaker extends HTMLElement {
     `;
   }
 
+  // Creates all the options for a particular label
   createOptions(options, lookupTable, type) {
     const optionNodes = options.map((option) => {
       // Look up the name which will be used as display text
@@ -53,9 +57,21 @@ class BobaMaker extends HTMLElement {
         displayText = displayText.split(' milk')[0];
       }
 
-      return `<option value="${option}">${displayText}</option>`;
+      // Return a single option component for each
+      return this.createSingleOption(option, displayText)
     });
+
+    // If it's a topping, add a none option to it
+    if (type === 'toppings') {
+      optionNodes.push(this.createSingleOption('none', 'none'))
+    }
+
     return optionNodes.join('\n');
+  }
+
+  // Creates a single option element with given text
+  createSingleOption(option, displayText) {
+    return `<option value="${option}">${displayText}</option>`;
   }
 }
 window.customElements.define('boba-maker', BobaMaker);
