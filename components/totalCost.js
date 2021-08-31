@@ -11,7 +11,7 @@ class TotalCost extends HTMLElement {
     <br>
     <span id="total-num-bobas">${numBobas}</span>
     <br>
-    ${size} ${flavor} bobas with ${this.formatToppings(topping1, topping2)} 
+    ${size} ${flavor} bobas ${this.formatToppings(topping1, topping2)} 
   </h2>
 </div>`;
   }
@@ -28,15 +28,15 @@ class TotalCost extends HTMLElement {
       // Scenario 1: has 2 toppings
       case 2: {
         // Scenario 1a: both are same
-        if (toppings[0] === toppings[1]) return ` with extra ${toppings[0]}`;
+        if (toppings[0] === toppings[1]) return `with extra ${toppings[0]}`;
 
         // Scenario 1b: toppings are different
-        return ` with ${toppings[0]} and ${toppings[1]}`;
+        return `with ${toppings[0]} and ${toppings[1]}`;
       }
 
       // Scenario 2: has one topping
       case 1:
-        return ` with ${toppings[0]}`;
+        return `with ${toppings[0]}`;
 
       // Scenario 3: no toppings
       default:
